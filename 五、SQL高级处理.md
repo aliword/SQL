@@ -93,13 +93,13 @@ ROLLUP 可以对多列进行汇总求小计和合计。
 
 ```sql
  SELECT product_name
-			 ,product_type
-			 ,sale_price
-			 ,SUM(sale_price) OVER (PARTITION BY product_type
-												 ORDER BY sale_price) AS sum_org
-			 ,SUM(sale_price) OVER (PARTITION BY product_type
-												 ORDER BY product_type) AS sum_tol
-  FROM product;
+	,product_type
+	,sale_price
+	,SUM(sale_price) OVER (PARTITION BY product_type
+			       ORDER BY sale_price) AS sum_org
+	,SUM(sale_price) OVER (PARTITION BY product_type
+			       ORDER BY product_type) AS sum_tol
+   FROM product;
   ```
 【组内百分比与累计百分比】
 
@@ -110,20 +110,20 @@ ROLLUP 可以对多列进行汇总求小计和合计。
 实现如下：
 ```sql
  SELECT product_name
-				,product_type
-				,sale_price
-				,sum_org
-				,CONCAT(ROUND((sale_price/sum_tol)*100, 2), "%") AS sal_percent
-				,sum_tol
-				,CONCAT(ROUND((sum_org/sum_tol)*100, 2), "%") AS org_percent
-	FROM ( SELECT product_name
-			 ,product_type
-			 ,sale_price
-			 ,SUM(sale_price) OVER (PARTITION BY product_type
-												 ORDER BY sale_price) AS sum_org
-			 ,SUM(sale_price) OVER (PARTITION BY product_type
-												 ORDER BY product_type) AS sum_tol
-  FROM product) AS p
+	,product_type
+	,sale_price
+	,sum_org
+	,CONCAT(ROUND((sale_price/sum_tol)*100, 2), "%") AS sal_percent
+	,sum_tol
+	,CONCAT(ROUND((sum_org/sum_tol)*100, 2), "%") AS org_percent
+   FROM ( SELECT product_name
+		 ,product_type
+		 ,sale_price
+		 ,SUM(sale_price) OVER (PARTITION BY product_type
+					ORDER BY sale_price) AS sum_org
+		 ,SUM(sale_price) OVER (PARTITION BY product_type
+					ORDER BY product_type) AS sum_tol
+  	    FROM product) AS p
 ```	
 结果：
 
